@@ -1,9 +1,10 @@
 from matplotlib.pyplot import imread, imshow, imsave
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 import cv2
 from Clustering import file_name, kmeans
+from PIL import Image
+import os
 
 
 
@@ -13,10 +14,11 @@ def filter2d(img, n):
     return blurred
 
 
-def canny(img, n):
+def canny(img, n, k):
+    img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
     blurred = filter2d(img, n)
-    lower = 10
-    upper = 100
+    lower = 100
+    upper = 200
 
     """
     Any pixels with a value below the minval are defined as definitely not edges.
@@ -28,56 +30,41 @@ def canny(img, n):
     dst = cv2.Canny(blurred, lower, upper)
     rgb = cv2.cvtColor(dst, cv2.COLOR_GRAY2RGB)
 
-    rgb = cv2.bitwise_not(rgb) # Credit: https://stackoverflow.com/a/40954142/4367851
+    #rgb = cv2.bitwise_not(rgb) # Credit: https://stackoverflow.com/a/40954142/4367851
     # Save and display output image
-    imsave(("OutputImages/" + str(file_name) + "CannyOutput.jpg"), rgb)
+    #rgb = cv2.morphologyEx(rgb, cv2.MORPH_OPEN, (5, 5))
+    rgb = cv2.dilate(rgb, (5, 5), iterations=1)
+    rgb = cv2.bitwise_not(rgb)  # Credit: https://stackoverflow.com/a/40954142/4367851
+    imsave(("OutputImages/" + str(file_name) + str(n*10) + "Kmeans" + str(k) + "Canny.jpg"), rgb)
 
     return rgb
 
 
-def plot_creator():
-    max = 3
-    for j in range(1, max):
-        img = kmeans(int(j*10))
-        height, width, _ = img.shape
-        #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+def plot_creator(n):
+    fig, axs = plt.subplots(3, 2, facecolor='w', edgecolor='k')
+    fig.subplots_adjust(hspace=.3, wspace=.001)
+    axs = axs.ravel()
 
-        fig, axs = plt.subplots(max, 6, figsize=(15, 6), facecolor='w', edgecolor='k')
-        fig.subplots_adjust(hspace=.5, wspace=.001)
-        axs = axs.ravel()
-        for i in range(0, 6*max):
-            if i % 6 == 0:
-                img = imread(("OutputImages/" + str(file_name) + str(j*10) + "Clustered.jpg"))
-                axs[i].imshow(img.astype(np.uint8))
-                axs[i].set_xticks([])
-                axs[i].set_yticks([])
+    img = kmeans(int(n * 10))
+    for i in range(0, 6):
+        if i % 6 == 0:
+            img = imread(("OutputImages/" + str(file_name) + str(n*10) + "Clustered.jpg"))
+            axs[0].imshow(img.astype(np.uint8))
+            axs[0].set_xticks([])
+            axs[0].set_yticks([])
+            if n == 1:
+                axs[0].set_title("Original with " + str(n) + " cluster.")
             else:
-                axs[i].imshow(canny(img, i*2))
-                axs[i].set_xticks([])
-                axs[i].set_yticks([])
+                axs[0].set_title("Original with " + str(n) + " clusters.")
 
+        else:
+            axs[i].imshow(canny(img, i*2, n))
+            axs[i].set_xticks([])
+            axs[i].set_yticks([])
+            axs[i].set_title(str("Canny Kernel: " + str(i)))
+
+    plt.savefig("Output" + str(n) + ".jpg")
     plt.show()
 
-
-
-
-def plot_creator2():
-    for j in range(1, 4):
-        fig, axs = plt.subplots(1, 6, figsize=(15, 6), facecolor='w', edgecolor='k')
-        fig.subplots_adjust(hspace=.5, wspace=.001)
-        axs = axs.ravel()
-
-        for i in range(0, 6):
-            if i % 6 == 0:
-                img = imread(("OutputImages/" + str(file_name) + str(j*10) + "Clustered.jpg"))
-                axs[0].imshow(img.astype(np.uint8))
-                axs[0].set_xticks([])
-                axs[0].set_yticks([])
-            else:
-                img = kmeans(int(i * 10))
-                axs[i].imshow(canny(img, i*2))
-                axs[i].set_xticks([])
-                axs[i].set_yticks([])
-        plt.show()
-
-plot_creator2()
+for n in range(1,5):
+    plot_creator(n)

@@ -5,7 +5,7 @@ from sklearn.cluster import KMeans
 import numpy as np
 import matplotlib.pyplot as plt
 
-file_name = "mia"
+file_name = "family"
 file_path = str("InputImages/" + file_name + ".jpg")
 
 def kmeans(k, file_path = file_path):

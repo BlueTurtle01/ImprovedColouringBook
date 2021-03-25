@@ -1,0 +1,1 @@
+We can not use Otsu thresholding as the input image's histogram is not bimodal.

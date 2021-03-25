@@ -8,7 +8,7 @@ import pandas as pd
 import os
 
 
-def find_colour_pal(compressed_image):
+def find_colour_pal(compressed_image, im_name):
     # Credit: https://stackoverflow.com/a/51729498/4367851
     temp_image = Image.fromarray(np.uint8(compressed_image)).convert('RGB')
     colours = Image.Image.getcolors(temp_image)
@@ -21,15 +21,16 @@ def find_colour_pal(compressed_image):
 
     RGB = df["RGB"].tolist()
     palette = np.array(RGB)[np.newaxis, :, :]
-    # #palette = palette.reshape(2, -1, 3)
-    # plt.figure(figsize=(20, 10))
-    # plt.imshow(palette)
-    # plt.xticks([])
-    # plt.yticks([])
-    # plt.savefig("Name.png", dpi=600, bbox_inches='tight')
-    # plt.show()
+    palette = palette.reshape(2, -1, 3)
+    plt.figure(figsize=(20, 10))
+    plt.imshow(palette)
+    plt.xticks([])
+    plt.yticks([])
+    plt.savefig(("OutputImages/" + str(im_name) + "/" + "Palette.png"), dpi=600, bbox_inches='tight')
+    plt.show()
 
     return palette
+
 
 def plot_histogram(imag):
     plt.hist(imag.ravel(), 256) #Histogram is not bimodal so we can not use Otsu's thresholding.
@@ -39,28 +40,28 @@ def plot_histogram(imag):
     plt.show()
 
 
-def plot_image(image, title, map="gray"):
+def plot_image(image, title, im_name, map="gray"):
     plt.imshow(image, cmap=map)
     plt.xticks([])
     plt.yticks([])
     plt.title(title)
+    imsave(("OutputImages/" + str(im_name) + "/" + str(title) + ".jpg"), image, cmap=map)
     plt.show()
 
 
 def kmeans(clusters):
-    file_name = "paul"
+    file_name = "astrocute"
     file_path = str("InputImages/" + file_name + ".jpg")
 
     #Read the image
     #imag = Image.open(file_path)
     imag = cv2.imread(file_path)
-    plot_image(image=cv2.cvtColor(imag, cv2.COLOR_BGR2RGB), title="Original Image")
+    plot_image(image=cv2.cvtColor(imag, cv2.COLOR_BGR2RGB), title="Original Image", im_name=file_name)
     #plot_histogram(imag)
 
     #Dimension of the original image
     #cols, rows = imag.size
     rows, cols, _ = imag.shape
-
 
     #Flatten the image
     imag = np.array(imag).reshape(rows*cols, 3)
@@ -69,22 +70,23 @@ def kmeans(clusters):
     kmeans = KMeans(n_clusters=clusters)
     kmeans.fit(imag)
 
-    #Replace each pixel value with its nearby centroid
+    #  Replace each pixel value with its nearby centroid
     compressed_image = kmeans.cluster_centers_[kmeans.labels_]
     compressed_image = np.clip(compressed_image.astype('uint8'), 0, 255)
 
-
-    #Reshape the image to original dimension
+    #  Reshape the image to original dimension
     compressed_image = compressed_image.reshape(rows, cols, 3)
-    palette = find_colour_pal(compressed_image)
+    palette = find_colour_pal(compressed_image, im_name=file_name)
 
 
-    #Save and display output image
-    imsave(("OutputImages/" + str(file_name) + str(clusters) + "Clustered.jpg"), compressed_image)
-    #imshow(compressed_image)
-    #plt.show()
+    # Save and display output image
+    if not os.path.isdir("OutputImages/" + str(file_name)):
+        os.mkdir("OutputImages/" + str(file_name))
+    else:
+        pass
+    imsave(("OutputImages/" + str(file_name) + "/" + str(file_name) + str(clusters) + "Clustered.jpg"), compressed_image)
 
-    return compressed_image, palette
+    return compressed_image, palette, file_name
 
 
 def auto_canny(image, sigma=0.5):
@@ -97,10 +99,10 @@ def auto_canny(image, sigma=0.5):
     return edged
 
 
-def blend_outputs(outline):
-    alpha = 0.4 #This is the amount of the coloured image we include. 0 is none.
+def blend_outputs(outline, file_name, clusters):
+    alpha = 0.4  # This is the amount of the coloured image we include. 0 is none.
     beta = 1 - alpha
-    compressed_image = imread("OutputImages/paul10Clustered.jpg")
+    compressed_image = imread(("OutputImages/" + str(file_name) + "/" + str(file_name) + str(clusters) + "Clustered.jpg"))
     compressed_image = cv2.cvtColor(compressed_image, cv2.COLOR_BGR2RGB)
 
     outline = np.concatenate([outline[..., np.newaxis]] * 3, axis=2)
@@ -112,19 +114,20 @@ def blend_outputs(outline):
     plt.yticks([])
     plt.show()
 
-def canny(img):
+
+def canny(img, file_name):
     compressed_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) #imread reads images as Blue, Green, Red, Alpha
-    plot_image(image=cv2.cvtColor(img, cv2.COLOR_BGR2RGB), title="Compressed")
+    plot_image(image=cv2.cvtColor(img, cv2.COLOR_BGR2RGB), title="Compressed", im_name=file_name)
 
     k = 15
     blurred = cv2.GaussianBlur(compressed_img, (k, k), sigmaX=(k-1)/6)
-    plot_image(image=blurred, title="Blurred", map="gray")
+    plot_image(image=blurred, title="Blurred", im_name=file_name, map="gray")
 
     th3 = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 25, 3)
     th3 = cv2.morphologyEx(th3, cv2.MORPH_CLOSE, (9, 9))
 
-    blend_outputs(th3)
-    plot_image(th3, title="Threshold Gray")
+    blend_outputs(th3, file_name, clusters=20)
+    plot_image(th3, title="Threshold Gray", im_name=file_name)
 
     th3 = cv2.bitwise_not(th3)
 
@@ -148,7 +151,7 @@ def canny(img):
 
     temp_array = np.ones([rgb.shape[0], rgb.shape[1], rgb.shape[2]])
     contours_ = cv2.drawContours(temp_array, final_contours, -1, (0, 0, 0), thickness=3)
-    plot_image(contours_, title="Contours")
+    plot_image(contours_, title="Contours", im_name=file_name)
 
     # fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
     # lines0 = cv2.drawContours(rgb, contours, 0, (0, 0, 0), 3)
@@ -180,6 +183,33 @@ def canny(img):
 
     return rgb
 
+def calculate_clusters():
+    # Credit: https://blog.cambridgespark.com/how-to-determine-the-optimal-number-of-clusters-for-k-means-clustering-14f27070048f
+    file_name = "astrocute"
+    file_path = str("InputImages/" + str(file_name) + ".jpg")
+    imag = cv2.imread(file_path)
+    Sum_of_squared_distances = []
+    # Dimension of the original image
+    rows, cols, _ = imag.shape
 
-img, palette = kmeans(int(10))
-canny(img)
+    # Flatten the image
+    imag = np.array(imag).reshape(rows*cols, 3)
+
+    K = range(1, 20)
+    for k in K:
+        km = KMeans(n_clusters=k)
+        km.fit(imag)
+        Sum_of_squared_distances.append(km.inertia_)
+
+    plt.plot(K, Sum_of_squared_distances, 'bx-')
+    plt.xlabel('k')
+    plt.ylabel('Sum of Squared Distances')
+    plt.title('Elbow Method For Optimal k')
+    plt.show()
+
+#calculate_clusters()
+
+
+img, palette, file_name = kmeans(int(8))
+canny(img, file_name)
+

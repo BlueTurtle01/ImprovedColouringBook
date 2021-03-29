@@ -8,7 +8,7 @@ import pandas as pd
 import os
 
 
-file_name = "sarah2"
+file_name = "ash"
 file_path = str("InputImages/" + file_name + ".jpg")
 output_path = ("OutputImages/" + str(file_name) + "/")
 
@@ -87,43 +87,50 @@ def auto_canny(image, sigma=0.5):
     return edged
 
 
-def create_alpha():
-    from PIL import Image
-    outline_rgba = (str(output_path) + "Threshold Gray.jpg")
-    outline_rgba = Image.open(outline_rgba)
-    outline_rgba = outline_rgba.convert("RGBA")
+def white_to_transparency():
+    img = (str(output_path) + "Threshold Gray.jpg")
+    img = Image.open(img)
 
-    outline_rgba_np = np.array(outline_rgba)
-    white = np.sum(outline_rgba_np[:, :, :3], axis=2)
-    white_mask = np.where(white == 255 * 3, 1, 0)
-    alpha = np.where(white_mask, 0, outline_rgba_np[:, :, -1])
+    x = np.asarray(img.convert('RGBA')).copy()
 
-    outline_rgba_np[:, :, -1] = alpha
+    x[:, :, 3] = (255 * (x[:, :, :3] != 255).any(axis=2)).astype(np.uint8)
 
-    img = Image.fromarray(np.uint8(outline_rgba_np))
-    img.save("OutputImages/ash/Threshold Gray Transparent.png")
-
-    return outline_rgba_np
+    return Image.fromarray(x)
 
 
-def blend_outputs(outline, clusters):
+def blend_outputs(clusters):
     """
     Some of the edges are not closed loops so it can be confusing where one colour stops and another starts.
     I think overlaying the outlines onto a slightly transparent version of the compressed image gives a good guide to the user for which colour to fill each area with.
 
-    :param outline: The numpy array of outline pixel values
     :param clusters: Number of clusters from the k-means algorithm
     :return: NA
     """
-    alpha = 0.6  # This is the amount of the coloured image we include. 0 is none.
-    beta = 1 - alpha
+
     compressed_image = imread((str(output_path) + str(file_name) + str(clusters) + "Clustered.jpg"))
     compressed_image = cv2.cvtColor(compressed_image, cv2.COLOR_BGR2RGB)
+    compressed_rgba = cv2.cvtColor(compressed_image, cv2.COLOR_RGB2RGBA)
+    compressed_PIL = Image.fromarray(compressed_rgba)
+
+    # Change the outline to RGBA and then convert to PIL Image
+    outline_rgba = white_to_transparency()
+
+    final2 = Image.alpha_composite(compressed_PIL, outline_rgba)
+
+    plot_image(final2, "Comic Character")
+
+
+def create_painting_template(outline, clusters):
+    alpha = 0.2  # This is the amount of the coloured image we include. 0 is none.
+    beta = 1 - alpha
+    compressed = imread((str(output_path) + str(file_name) + str(clusters) + "Clustered.jpg"))
+    compressed = cv2.cvtColor(compressed, cv2.COLOR_BGR2RGB)
 
     outline = np.concatenate([outline[..., np.newaxis]] * 3, axis=2)
-    output = cv2.addWeighted(outline, beta, compressed_image, alpha, 0.0)
 
-    plot_image(output, "Blended")
+    output = cv2.addWeighted(outline, beta, compressed, alpha, 0)
+
+    plot_image(output, "Painting Underlay")
 
 
 def draw_contours(edged):
@@ -174,8 +181,9 @@ def main_func(img, clusters):
     threshold_image = cv2.morphologyEx(threshold_image, cv2.MORPH_CLOSE, (15, 15))
 
     # Overlay the threshold_image on top of a slightly transparent copy of the clustered image.
-    blend_outputs(threshold_image, clusters=clusters)
     plot_image(threshold_image, title="Threshold Gray")
+    create_painting_template(threshold_image, clusters=clusters)
+    blend_outputs(clusters=clusters)
 
     inverted_threshold = cv2.bitwise_not(threshold_image)
 
@@ -219,6 +227,16 @@ def main_func(img, clusters):
 def calculate_clusters():
     # Credit: https://blog.cambridgespark.com/how-to-determine-the-optimal-number-of-clusters-for-k-means-clustering-14f27070048f
     original_image = cv2.imread(file_path)
+
+    #Create a directory for the outputs if one does not already exist
+    try:
+        os.mkdir("OutputImages/" + str(file_name))
+    except FileExistsError:
+        pass
+
+    imsave("OutputImages/" + str(file_name) + "/Original Image.jpg", original_image)
+
+    # Save the original image in RGB
     plot_image(image=cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB), title="Original Image")
     plot_histogram(original_image)
 
@@ -229,8 +247,7 @@ def calculate_clusters():
     # Flatten the image
     imag = np.array(original_image).reshape(rows*cols, 3)
 
-    #K = range(4, 5)
-    K = [10]
+    K = range(15, 16)
     for k in K:
         print(k)
         km = KMeans(n_clusters=k)
@@ -259,11 +276,6 @@ def calculate_clusters():
     compressed_image = compressed_image.reshape(rows, cols, 3)
     find_colour_pal(compressed_image, im_name=file_name)
 
-    # Save and display output image
-    if os.path.isdir("OutputImages/" + str(file_name)):
-        pass
-    else:
-        os.mkdir("OutputImages/" + str(file_name))
     imsave(("OutputImages/" + str(file_name) + "/" + str(file_name) + str(clusters) + "Clustered.jpg"), compressed_image)
 
     return clusters, compressed_image, original_image
@@ -276,7 +288,6 @@ def get_image(path, width):
     iw, ih = img.getSize()
     aspect = ih / float(iw)
     return Image(path, width=width, height=(width * aspect))
-
 
 
 def pdf_creator(original_image):

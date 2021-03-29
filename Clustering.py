@@ -9,7 +9,7 @@ import pandas as pd
 
 
 
-file_name = "lina"
+file_name = "ash"
 file_path = str("InputImages/" + file_name + ".jpg")
 
 

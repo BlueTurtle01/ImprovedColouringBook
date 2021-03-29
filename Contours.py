@@ -93,7 +93,8 @@ def white_to_transparency():
 
     x = np.asarray(img.convert('RGBA')).copy()
 
-    x[:, :, 3] = (255 * (x[:, :, :3] != 255).any(axis=2)).astype(np.uint8)
+    # Find all cells where any of the pixels in RGB space are not white - i.e have some colour
+    x[:, :, 3] = (255 * (x[:, :, :3] < 235).any(axis=2)).astype(np.uint8)
 
     return Image.fromarray(x)
 
@@ -172,7 +173,7 @@ def main_func(img, clusters):
     compressed_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # imread reads images as Blue, Green, Red, Alpha
     plot_image(image=cv2.cvtColor(img, cv2.COLOR_BGR2RGB), title="Compressed")
 
-    k = 15  # Size of the kernal for the Gaussian Blur
+    k = 9  # Size of the kernal for the Gaussian Blur
     blurred = cv2.GaussianBlur(compressed_img, (k, k), sigmaX=(k-1)/6)
     plot_image(image=blurred, title="Blurred", map="gray")
 
@@ -247,7 +248,7 @@ def calculate_clusters():
     # Flatten the image
     imag = np.array(original_image).reshape(rows*cols, 3)
 
-    K = range(15, 16)
+    K = range(10, 11)
     for k in K:
         print(k)
         km = KMeans(n_clusters=k)

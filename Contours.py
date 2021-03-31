@@ -2,13 +2,13 @@ from matplotlib.pyplot import imread, imshow, imsave
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 from sklearn.cluster import KMeans
 import pandas as pd
 import os
 
 
-file_name = "ash"
+file_name = "anna"
 file_path = str("InputImages/" + file_name + ".jpg")
 output_path = ("OutputImages/" + str(file_name) + "/")
 
@@ -46,7 +46,7 @@ def find_colour_pal(compressed_image, im_name):
     plt.xticks([])
     plt.yticks([])
     plt.savefig(("OutputImages/" + str(im_name) + "/Palette.png"), dpi=600, bbox_inches='tight')
-    plt.show()
+    #plt.show()
 
     return palette
 
@@ -94,9 +94,54 @@ def white_to_transparency():
     x = np.asarray(img.convert('RGBA')).copy()
 
     # Find all cells where any of the pixels in RGB space are not white - i.e have some colour
-    x[:, :, 3] = (255 * (x[:, :, :3] < 235).any(axis=2)).astype(np.uint8)
+    x[:, :, 3] = (255 * (x[:, :, :3] < 220).any(axis=2)).astype(np.uint8)
 
     return Image.fromarray(x)
+
+
+def calculate_font_size(caption, box, img_fraction):
+    fontsize = 20  # Starting fontsize
+    font = ImageFont.truetype("comicbold.ttf", fontsize)
+    while font.getsize(caption)[0] < img_fraction * box.size[0]:
+        # iterate until the text size is just larger than the criteria
+        fontsize += 1
+        font = ImageFont.truetype("comicbold.ttf", fontsize)
+
+    return font
+
+
+
+def add_caption(comic_frame):
+    width, height = comic_frame.size
+    font = ImageFont.truetype("comicbold.ttf", 40)
+    draw = ImageDraw.Draw(comic_frame)
+    caption = "Not all superheroes are found in comics"
+    tag = "#HeroesOfThePandemic"
+
+    bottom_right_caption = (width, height)
+    top_left_caption = (width*0.25, height*0.8)
+    top_left_date = (0, 0)
+    bottom_right_date = (width*.40, height*0.1)
+
+    # x0, y1 start at the top left of the image
+    # x0, y0 is the top left of the caption box
+    # x1, y1 is the bottom right of the caption box
+
+    # Create a caption box at the top left of the image
+    draw.rectangle((top_left_date, bottom_right_date), fill="white", outline="black", width=6)
+    tag_font_size = calculate_font_size(tag, comic_frame, img_fraction=0.2)
+    draw.text((20, 20), tag, (0, 0, 0), font=tag_font_size)
+
+    # Create a white caption box at the bottom right of the image
+    draw.rectangle((top_left_caption, bottom_right_caption), fill="white", outline="black", width=6)
+    caption_font_size = calculate_font_size(caption, comic_frame, img_fraction=0.60)
+    #draw.text((top_left_caption[0]+20, top_left_caption[1]+20), "Not all superheroes are found in comics.", (0, 0, 0), font=font)
+    #draw.text((top_left_caption[0]+20, top_left_caption[1]+70), "#HeroesOfThePandemic", (0, 0, 0), font=font)
+    draw.text((top_left_caption[0]*1.1, (height-top_left_caption[1])*0.3+top_left_caption[1]), caption, (0, 0, 0), font=caption_font_size)
+    #draw.text((top_left_caption[0]+20, top_left_caption[1]+70), "#HeroesOfThePandemic", (0, 0, 0), font=font)
+    comic_frame.save(str(output_path) + "Caption.png")
+    imshow(comic_frame)
+    plt.show()
 
 
 def blend_outputs(clusters):
@@ -116,9 +161,15 @@ def blend_outputs(clusters):
     # Change the outline to RGBA and then convert to PIL Image
     outline_rgba = white_to_transparency()
 
-    final2 = Image.alpha_composite(compressed_PIL, outline_rgba)
+    # Combine the outline image and the output of the k-means alogrithm together.
+    alpha_blended = Image.alpha_composite(compressed_PIL, outline_rgba)
+    alpha_blended.save((str(output_path) + "Comic Character.png"))
 
-    plot_image(final2, "Comic Character")
+    # Add a caption box over the composite image to give it a comic book effect.
+    add_caption(alpha_blended)
+
+
+    plt.show()
 
 
 def create_painting_template(outline, clusters):
@@ -248,7 +299,7 @@ def calculate_clusters():
     # Flatten the image
     imag = np.array(original_image).reshape(rows*cols, 3)
 
-    K = range(10, 11)
+    K = range(5, 6)
     for k in K:
         print(k)
         km = KMeans(n_clusters=k)

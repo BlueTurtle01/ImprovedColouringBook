@@ -81,7 +81,8 @@ class ComicCharacter:
         self.compressed_img = cv2.cvtColor(self.compressed_image, cv2.COLOR_BGR2GRAY)  # imread reads images as Blue, Green, Red, Alpha
 
         k = 9  # Size of the kernel for the Gaussian Blur
-        blurred = cv2.GaussianBlur(self.compressed_img, (k, k), sigmaX=(k - 1) / 6)
+        #blurred = cv2.GaussianBlur(self.compressed_img, (k, k), sigmaX=(k - 1) / 6)
+        blurred = cv2.bilateralFilter(self.compressed_img, k, 75, 75)
 
         # Conduct Adaptive Thresholding to the blurred image
         threshold_image = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 25, 3)
@@ -116,8 +117,8 @@ class ComicCharacter:
         width, height = self.alpha_blended.size
 
         draw = ImageDraw.Draw(self.alpha_blended)
-        caption = "Not all superheroes are found in comics"
-        tag = "#HeroesOfThePandemic"
+        caption = "London"
+        tag = "April 3rd 2021"
 
         bottom_right_caption = (width, height)
         top_left_caption = (width * 0.25, height * 0.9)

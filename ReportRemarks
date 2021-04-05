@@ -54,6 +54,8 @@ Literary Review
 Methods
 Canny
 
+* Change Gaussian Blur to Bilateral Filter as Bilateral preserves edges, whereas Gaussian does not.
+* Included a second filter Median Blur, to remove the salt-and-pepper noise.
 
 Thresholding
 

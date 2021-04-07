@@ -49,7 +49,7 @@ error is minimised when k = the numer of pixels in the image as each pixel is it
 
 Literary Review
 
-
+https://colab.research.google.com/github/tensorflow/models/blob/master/research/deeplab/deeplab_demo.ipynb#scrollTo=edGukUHXyymr
 
 Methods
 Canny

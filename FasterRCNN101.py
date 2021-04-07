@@ -1,23 +1,21 @@
 import torch
 import matplotlib.pyplot as plt
+from matplotlib.pyplot import imsave
 from PIL import Image
 from torchvision import transforms
 import os
+
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
 
 class MaskFinder:
-    def __init__(self, file_name):
+    def __init__(self, file_name, model_type_a, model_type_b, model_name, output_path):
         self.file_name = file_name
         self.file_path = "MultiInputs/" + file_name + ".jpg"
-
-    def load_model(self):
-        self.model = torch.hub.load('pytorch/vision:v0.9.0', 'fcn_resnet101', pretrained=True)
-
-    def load_image(self):
+        self.model = torch.hub.load(model_type_a, model_type_b, pretrained=True)
         self.input_image = Image.open(self.file_path)
-        plt.imshow(self.input_image)
-        plt.show()
+        self.model_name = model_name
+        self.output_path = output_path
 
     def transform_image(self):
         preprocess = transforms.Compose([
@@ -33,11 +31,12 @@ class MaskFinder:
             output = self.model(self.input_batch)['out'][0]
 
         self.output_predictions = output.argmax(0)
+        return self.output_predictions
 
     def plot_mask(self):
         # create a color palette, selecting a color for each class
         palette = torch.tensor([2 ** 25 - 1, 2 ** 15 - 1, 2 ** 21 - 1])
-        colors = torch.as_tensor([i for i in range(21)])[:, None] * palette
+        colors = torch.as_tensor([i for i in range(20)])[:, None] * palette
         colors = (colors % 255).numpy().astype("uint8")
 
         # plot the semantic segmentation predictions of 21 classes in each color
@@ -45,15 +44,13 @@ class MaskFinder:
         r.putpalette(colors)
 
         plt.imshow(r)
+        plt.title(self.model_name)
+        plt.xticks([])
+        plt.yticks([])
         plt.show()
 
 
-FCNResnet = MaskFinder(file_name="family")
-FCNResnet.load_model()
-FCNResnet.load_image()
+FCNResnet = MaskFinder(file_name="david", model_type_a='pytorch/vision:v0.9.0', model_type_b='fcn_resnet101', model_name="FCN", output_path="MultiOutput/")
 FCNResnet.transform_image()
-FCNResnet.make_predictions()
+mask = FCNResnet.make_predictions()
 FCNResnet.plot_mask()
-
-
-# model = torch.hub.load('pytorch/vision:v0.9.0', 'deeplabv3_resnet101', pretrained=True)

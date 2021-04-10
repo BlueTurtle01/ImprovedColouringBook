@@ -86,13 +86,13 @@ class Canny:
 
         final_contours = []
         for contour in contours:
-            if cv2.contourArea(contour) > 30 and cv2.isContourConvex(contour) is True:
+            if cv2.contourArea(contour) > 30:
                 final_contours.append(contour)
             else:
                 pass
 
         temp_array = np.ones([rgb.shape[0], rgb.shape[1], rgb.shape[2]])
-        contours_ = cv2.drawContours(temp_array, final_contours, -1, (0, 0, 0), thickness=-1, maxLevel=0)
+        contours_ = cv2.drawContours(temp_array, final_contours, -1, (0, 0, 0), thickness=-1)
 
         plt.imshow(contours_, cmap="gray")
         plt.xticks([])
@@ -101,7 +101,7 @@ class Canny:
         imsave((str(self.output_path) + "Contours.jpg"), contours_, cmap="gray")
 
 
-pic = Canny(name="mia", path="InputImages/mia.jpg", clusters=10, output="OutputImages/mia")
+pic = Canny(name="race", path="InputImages/race.jpg", clusters=10, output="OutputImages/race")
 pic.k_means()
 pic.canny_edge_detection()
 pic.gaussian_filter(k=7)

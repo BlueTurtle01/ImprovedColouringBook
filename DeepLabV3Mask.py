@@ -147,10 +147,14 @@ class MaskFinder:
         seg_map_pil = np.array(seg_map_pil.resize((int(original_width), int(original_height))))
         seg_image = label_to_color_image(seg_map_pil).astype(np.uint8)
 
-        imsave(self.output_path + self.file_name + "/" + "SegmentationMaskDeepLab.jpg", arr=seg_image)
+        imsave(self.output_path + "SegmentationMaskDeepLab.jpg", arr=seg_image)
 
 
-Mask = MaskFinder(file_path="MultiInputs/horse.jpg", file_name="horse", output_path="MultiOutput/")
+file_name = "david"
+file_path = "MultiInputs/" + file_name + ".jpg"
+output_path = "MultiOutput/" + file_name + "/"
+
+Mask = MaskFinder(file_path=file_path, file_name=file_name, output_path="MultiOutput/")
 Mask.define_model()
 Mask.run()
 Mask.vis_segmentation()

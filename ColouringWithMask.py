@@ -17,7 +17,9 @@ from PIL import ImageColor
 from PIL import ImageDraw
 from PIL import ImageFont
 import cv2
-
+from kneed import KneeLocator
+import glob
+from UtilityFunctions import directory_creator
 
 def draw_bounding_box_on_image(image, ymin, xmin, ymax, xmax, color, font, thickness=4, display_str_list=()):
     """Adds a bounding box to an image."""
@@ -25,7 +27,6 @@ def draw_bounding_box_on_image(image, ymin, xmin, ymax, xmax, color, font, thick
     im_width, im_height = image.size
     (left, right, top, bottom) = (xmin * im_width, xmax * im_width,
                                   ymin * im_height, ymax * im_height)
-    print("dir", left, right, top, bottom)
     draw.line([(left, top), (left, bottom), (right, bottom), (right, top),
                (left, top)],
               width=thickness,
@@ -106,7 +107,6 @@ class RegionDetector:
                 large_box[0, 3] = max(large_box[0, 3], bottom)
 
         left, right, top, bottom = large_box.T
-        print("Gfdbdf", left, right, top, bottom)
         image_ = cv2.cvtColor(np.array(image_), cv2.COLOR_BGR2RGB)
         plt.imshow(image_)
         plt.show()
@@ -197,21 +197,29 @@ class GrabCutMask:
         self.output_path = path
         self.file_path = file_path
         self.original_image = cv2.imread(self.file_path)
+        self.mask = cv2.imread("MultiInputs/SegmentationMaskDeepLab.jpg", cv2.IMREAD_GRAYSCALE)
+        self.mask_height, self.mask_width = self.mask.shape[0], self.mask.shape[1]
+
+    def crop_center(self):
+        cropx = self.mask_width
+        cropy = self.mask_height
+        y, x, _ = self.original_image.shape
+        startx = x // 2 - (cropx // 2)
+        starty = y // 2 - (cropy // 2)
+        self.original_image = self.original_image[starty:starty + cropy, startx:startx + cropx, :]
 
     def grab_cut_mask(self):
-        mask = cv2.imread("MultiInputs/SegmentationMaskDeepLab.jpg", cv2.IMREAD_GRAYSCALE)
-        width, height = self.original_image.shape[0], self.original_image.shape[1]
-        mask = np.resize(mask, (width, height))
+        #mask = np.resize(self.mask, (height, width))
 
-        mask[mask > 0] = cv2.GC_PR_FGD
-        mask[mask == 0] = cv2.GC_BGD
-        plt.imshow(mask)
+        self.mask[self.mask > 0] = cv2.GC_PR_FGD
+        self.mask[self.mask == 0] = cv2.GC_BGD
+        plt.imshow(self.mask)
         plt.show()
 
         fgModel = np.zeros((1, 65), dtype="float")
         bgModel = np.zeros((1, 65), dtype="float")
 
-        (self.mask, bgModel, fgModel) = cv2.grabCut(self.original_image, mask, None, bgModel, fgModel, iterCount=10, mode=cv2.GC_INIT_WITH_MASK)
+        (self.mask, bgModel, fgModel) = cv2.grabCut(self.original_image, self.mask, None, bgModel, fgModel, iterCount=10, mode=cv2.GC_INIT_WITH_MASK)
 
         values = (
             ("Definite Background", cv2.GC_BGD),
@@ -224,7 +232,7 @@ class GrabCutMask:
         for (name, value) in values:
             # construct a mask that for the current value
             print("Showing mask for '{}'".format(name))
-            valueMask = (mask == value).astype("uint8") * 255
+            valueMask = (self.mask == value).astype("uint8") * 255
 
             plt.imshow(valueMask)
             plt.title(name)
@@ -267,7 +275,7 @@ class Colouring:
         self.original_image = cv2.imread(self.file_path)
 
     def calculate_optimal_clusters(self):
-        sum_of_squared_distances = []
+        Sum_of_squared_distances = []
         # Dimension of the original image
         rows, cols, _ = self.original_image.shape
 
@@ -278,18 +286,12 @@ class Colouring:
         for k in K:
             km = KMeans(n_clusters=k)
             km.fit(imag)
-            sum_of_squared_distances.append(km.inertia_)
+            Sum_of_squared_distances.append(km.inertia_)
 
-        error_df = pd.DataFrame(list(zip(K, sum_of_squared_distances)), columns=["K", "Error"])
-        error_df["Difference"] = error_df["Error"] - error_df["Error"].shift(-1)
-
-        try:
-            self.clusters = min(error_df.index[error_df["Difference"] < 3e+06].tolist())
-        except ValueError:
-            self.clusters = max(error_df["K"])
+        kneedle = KneeLocator(K, Sum_of_squared_distances, S=1.0, curve="convex", direction="decreasing")
 
         # Implement k-means clustering to form k clusters
-        k_means = KMeans(n_clusters=self.clusters)
+        k_means = KMeans(n_clusters=kneedle.knee)
         k_means.fit(imag)
 
         #  Replace each pixel value with its nearby centroid
@@ -300,7 +302,7 @@ class Colouring:
         compressed_image = self.compressed_image.reshape(rows, cols, 3)
         self.compressed_image = cv2.cvtColor(compressed_image, cv2.COLOR_BGR2RGB)
 
-        imsave((self.output_path + self.file_name + str(self.clusters) + "Clustered.jpg"), self.compressed_image)
+        imsave((self.output_path + self.file_name + str(kneedle.knee) + "Clustered.jpg"), self.compressed_image)
 
     def thresholding(self):
         # The output of the k-means algorithm is an array in the form of Blue,Green,Red (BGR) which needs to be converted to grayscale before we conduct a Gaussian Blur.
@@ -311,27 +313,30 @@ class Colouring:
         blurred = cv2.bilateralFilter(self.compressed_img, k, 75, 75)
 
         # Conduct Adaptive Thresholding to the blurred image
-        threshold_image = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 1)
+        threshold_image = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 15, 1)
         self.threshold_image = cv2.morphologyEx(threshold_image, cv2.MORPH_CLOSE, (15, 15))
         imsave((self.output_path + "Threshold Gray.jpg"), threshold_image, cmap="gray")
 
-    def median(self, filter_size=7):
+    def median(self, filter_size=3):
         self.threshold_image = cv2.medianBlur(self.threshold_image, filter_size)
         imsave((self.output_path + "Threshold Gray Bil Filter Median Blur.jpg"), self.threshold_image, cmap="gray")
 
 
-detectors = ["Faster-RCNN"]
+file_names = [os.path.basename(x) for x in glob.glob('MultiInputs/*.jpg')]
 
-for model_type in detectors:
-    file_name = "horse"
-    file_path = "MultiInputs/" + file_name + ".jpg"
-    output_path = "MultiOutput/" + file_name + "/"
+for file_name in file_names:
+    file_name = file_name.split(".", 2)[0]
+    file_path = str("MultiInputs/" + file_name + ".jpg")
+    directory_creator(file_name=file_name)
+
+    output_path = ("MultiOutput/" + file_name + "/")
+
+
 
     # FasterRCNN = RegionDetector(file_name=(file_name + ".jpg"), file_path=file_path, path=output_path)
     # FasterRCNN.load_img()
     # FasterRCNN.load_model()
     # left, right, top, bottom = FasterRCNN.draw_boxes(max_boxes=6)
-
 
     #GrabCut with bounding boxes
     # cutter = GrabCut(name=file_name, file_path=file_path, path=output_path)
@@ -342,6 +347,7 @@ for model_type in detectors:
 
     #GrabCut with mask
     mask_cutter = GrabCutMask(name=file_name, file_path=file_path, path=output_path)
+    mask_cutter.crop_center()
     mask_cutter.grab_cut_mask()
     mask_cutter.plot_outputs(model_type="Mask")
 
@@ -349,5 +355,5 @@ for model_type in detectors:
     colouring = Colouring(name=file_name, output=output_path, path=file_path)
     colouring.calculate_optimal_clusters()
     colouring.thresholding()
-    # colouring.median(filter_size=7)
+    colouring.median()
 

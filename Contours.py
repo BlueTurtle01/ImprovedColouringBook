@@ -5,10 +5,14 @@ import cv2
 from PIL import Image, ImageDraw, ImageFont
 from sklearn.cluster import KMeans
 import pandas as pd
-import os
+from time import perf_counter
+from kneed import KneeLocator
+from Plots import plot_elbow_method
+from UtilityFunctions import directory_creator
 
 
-file_name = "anna"
+
+file_name = "race"
 file_path = str("InputImages/" + file_name + ".jpg")
 output_path = ("OutputImages/" + str(file_name) + "/")
 
@@ -67,14 +71,6 @@ def plot_image(image, title, map="gray"):
     imsave((str(output_path) + str(title) + ".jpg"), image, cmap=map)
     plt.show()
 
-
-def plot_errors(error_df, Sum_of_squared_distances, K):
-    plt.plot(K, Sum_of_squared_distances, 'bx-')
-    plt.plot(K, error_df["Difference"])
-    plt.xlabel('k')
-    plt.ylabel('Sum of Squared Distances')
-    plt.title('Elbow Method For Optimal k')
-    plt.show()
 
 
 def auto_canny(image, sigma=0.5):
@@ -237,8 +233,6 @@ def main_func(img, clusters):
     create_painting_template(threshold_image, clusters=clusters)
     blend_outputs(clusters=clusters)
 
-    inverted_threshold = cv2.bitwise_not(threshold_image)
-
     edged = auto_canny(blurred)
     edged = cv2.dilate(edged, (20, 20), iterations=1)
     edged = cv2.erode(edged, (20, 20), iterations=1)
@@ -280,44 +274,50 @@ def calculate_clusters():
     # Credit: https://blog.cambridgespark.com/how-to-determine-the-optimal-number-of-clusters-for-k-means-clustering-14f27070048f
     original_image = cv2.imread(file_path)
 
-    #Create a directory for the outputs if one does not already exist
-    try:
-        os.mkdir("OutputImages/" + str(file_name))
-    except FileExistsError:
-        pass
+    # Create a directory for the outputs if one does not already exist
+    directory_creator(file_name=file_name)
 
     imsave("OutputImages/" + str(file_name) + "/Original Image.jpg", original_image)
 
     # Save the original image in RGB
     plot_image(image=cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB), title="Original Image")
-    plot_histogram(original_image)
+    #plot_histogram(original_image)
 
     Sum_of_squared_distances = []
+    times = []
     # Dimension of the original image
     rows, cols, _ = original_image.shape
 
     # Flatten the image
     imag = np.array(original_image).reshape(rows*cols, 3)
 
-    K = range(5, 6)
+    K = range(1, 31, 5)
     for k in K:
+        start = perf_counter()
         print(k)
         km = KMeans(n_clusters=k)
         km.fit(imag)
+        stop = perf_counter()
+        times.append((stop-start))
         Sum_of_squared_distances.append(km.inertia_)
 
-    error_df = pd.DataFrame(list(zip(K, Sum_of_squared_distances)), columns=["K", "Error"])
-    error_df["Difference"] = error_df["Error"] - error_df["Error"].shift(-1)
+        #  Replace each pixel value with its nearby centroid
+        compressed_image = km.cluster_centers_[km.labels_]
+        compressed_image = np.clip(compressed_image.astype('uint8'), 0, 255)
 
-    plot_errors(error_df, Sum_of_squared_distances, K)
+        #  Reshape the image to original dimension
+        compressed_image = compressed_image.reshape(rows, cols, 3)
+        compressed_image = cv2.cvtColor(compressed_image, cv2.COLOR_BGR2RGB)
 
-    try:
-        clusters = min(error_df.index[error_df["Difference"] < 3e+06].tolist())
-    except ValueError:
-        clusters = max(error_df["K"])
+        imsave((str(output_path) + str(k) + "Clustered.jpg"), compressed_image)
+
+    kneedle = KneeLocator(K, Sum_of_squared_distances, S=1.0, curve="convex", direction="decreasing")
+
+    # plot_elbow_method: arguments (x, y1, y2, elbow point)
+    plot_elbow_method(Sum_of_squared_distances, times, K, knee=kneedle.knee)
 
     # Implement k-means clustering to form k clusters
-    kmeans = KMeans(n_clusters=clusters)
+    kmeans = KMeans(n_clusters=kneedle.knee)
     kmeans.fit(imag)
 
     #  Replace each pixel value with its nearby centroid
@@ -328,9 +328,7 @@ def calculate_clusters():
     compressed_image = compressed_image.reshape(rows, cols, 3)
     find_colour_pal(compressed_image, im_name=file_name)
 
-    imsave(("OutputImages/" + str(file_name) + "/" + str(file_name) + str(clusters) + "Clustered.jpg"), compressed_image)
-
-    return clusters, compressed_image, original_image
+    return kneedle.knee, compressed_image, original_image
 
 
 def get_image(path, width):
@@ -384,6 +382,6 @@ def pdf_creator(original_image):
 
 
 clusters, compressed_image, original_image = calculate_clusters()
-threshold_image = main_func(compressed_image, clusters=clusters)
+#threshold_image = main_func(compressed_image, clusters=clusters)
 #pdf_creator(original_image)
 

@@ -11,12 +11,23 @@ def plot_image(image, output_path, title, _map="gray"):
     plt.show()
 
 
-def plot_errors(error_df, sum_of_squared_distances, k):
-    plt.plot(k, sum_of_squared_distances, 'bx-')
-    plt.plot(k, error_df["Difference"])
-    plt.xlabel('k')
-    plt.ylabel('Sum of Squared Distances')
-    plt.title('Elbow Method For Optimal k')
+def plot_elbow_method(Sum_of_squared_distances, times, K, knee):
+    fig, ax1 = plt.subplots()
+
+    color = "tab:red"
+    ax1.plot(K, Sum_of_squared_distances, color=color)
+    ax1.set_xlabel('Number of clusters')
+    ax1.set_ylabel('Sum of Squared Distances', color=color)
+
+    ax2 = ax1.twinx()
+
+    color = "tab:blue"
+    ax2.plot(K, times, color=color)
+    ax2.set_ylabel("Execution Time (Seconds)", color=color)
+
+    plt.title('Elbow Method for optimal k')
+    plt.axvline(knee, label="Elbow Point", color="green")
+    plt.savefig(str(output_path) + "/ElbowMethod.png")
     plt.show()
 
 

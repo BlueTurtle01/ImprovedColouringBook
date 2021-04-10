@@ -38,14 +38,19 @@ If a human were designing the output outline for this image we would discard a s
 The reason this is easy for a human is because we are internally assigning a value to the aesthetics of the image and decide that the gain from improved aesthetics outweighs the increase
 in mathematical error that is introduced by swapping the red/blue for the shade of brown that minimises the error. Coding "aesthetic beauty" is very difficult and to some extent subjective.
 
-It is tempting to count the number of pixels for each RGB colour and then just select k clusters for the 10 most popular colours. However, the colour people's eyes, lips,
-clothes will likely be lost if they do not make up the majority of the image, which seems unlikely and does not allow our algorithm to be generally applied.
+It is tempting to count the number of pixels for each RGB colour and then just select k clusters for the 10 most popular colours. However, the colour of people's eyes, lips, and
+clothes will likely be lost if they do not make up the majority of the image, which seems unlikely and does not allow our algorithm to be generally applied. A partial solution to this is to separate our foreground from
+the background and apply k-means and edge detection to the foreground and background separately. This does not solve the problem of defining what "important colours" are, but it does allow us to use a different number of clusters
+for each section. This way the k colours chosen from the background can be different than the k colours chosen from the foreground, even if k is the same value. This allows us to still retain k clusters in the background to retain for
+example, detail in the foilage which would require multiple shades or green, but also retain detail in the foreground which may require multiple shades of skin tone. We can see in <Image of sophia with 2k> that just doubling the value for
+k does not solve this problem as often the result is that more shades of the most common colour are chosen and as previously assumed, this is unlikely to be the important object in the photograph, if the photograph follows conventional 1/3rd framing -
+ where 1/3rd of the photograph contains the important object and the other 2/3rds form the surroundings.
 
 
-error is minimised when k = the numer of pixels in the image as each pixel is its own cluster.
+error is minimised when k = the number of pixels in the image as each pixel is its own cluster.
 
 
-
+xception was significantly slower than mobilenet and the performance was only a little better at finding the masks. Did not work well on the london scene.
 
 Literary Review
 
@@ -62,4 +67,71 @@ Thresholding
 
 Things that did not work:
 * Thresholding the gray image a second time. Did not change outcome.
+* Changed from using probable background to definite background as the basis for thresholding. It often removed teeth and faces otherwise.
+    Now I feed definite background mask to thresholding. Loss of probability math aspect but proof that it's not always useful.
 
+Pipeline:
+There are two main approaches to creating an outline image from our photograph. We can use Canny Edge Detection (REF), or Thresholding (REF).
+There are two sub approaches as part of Thresholding that I will explore but first I will use Canny Edge Detection (Canny) so we can see the differences and discuss why
+Canny may not be appropriate given our aim.
+
+
+Canny works in the sense that it does indeed find the edges of the objects in the image, but, given our aim is not the most useful.
+Here, we are following in the Bayes notion in that we are considering our knowledge, incorporating that into our decisions, and then acting appropriately.
+Given our knowledge of the aim, to make a colouring book, it looks to be that Canny is not useful as the contours are not always connected - which is
+a requirement of a colouring book - and some of the closed contours are very small. Given our prior knowledge of the age of the customer, for example children,
+this may make Canny even more inappropriate for the task. Now we will look at Thresholding as a comparison.
+
+Thresholding has two sub approaches, 1. Thresholding the whole image, 2. Thresholding the foreground and background separately.
+To threshold the foreground and background individually we must first separate the foreground from the background. To do this I will use Machine Learning. Specifically I will split this approach
+down further and use a Faster-RCNN to create bounding boxes around each of the detected objects in the image, and a DeepLabV3 Semantic Segmentation model that will create a mask over the object.
+Both the bounding box and mask are fed into a GrabCut algorithm to be discussed later.
+
+# Faster-RCNN
+
+
+# DeepLabV3
+
+
+# GrabCut: REF: https://dl.acm.org/doi/10.1145/1186562.1015720
+GrabCut is an iterative algorithm that aims to classify pixels into the same class if they are part of the same object in the image. It works by estimating the colour distribution of the object and that of the
+background and using a Gaussian Mixture Model to determine which pixels belong to the object and those that belong to the object. We create a Markov Random field over the pixel values conduct a graph cut
+using the output prediction of which pixels are background and which are foreground. This is run until convergence.
+
+Initialisation: The algorithm requires a bounding box or mask that contains all of the foreground objects. This will be known as the "Definite Foreground". The remainder of the image can now be ignored by the GrabCut
+algorithm as we have defined this as "Definite Background". This is akin to injecting information into the model, as per the Bayesian style.
+
+Steps:
+1. A Gaussian Mixture Model is applied to the pixel values that defines each pixel as either "Probable Foreground" or "Probable Background" depending on its relation with neighbouring pixels.
+2. A graph is then constructed from this pixel distribution where each pixel is assigned to a node in this connected, undirected, graph. We add 2 more nodes:
+a Sink and a Source node. Each "Probable Foreground" pixel is connected to the Source node and every "Probably Background" pixel is
+connected to the Sink node. These connections are determined by the probability that each pixel belongs to background or foreground.
+We have previously determined "Definite Background" and "Definite Foreground" so those probabilities will be 1 for their respective Sink or Source node connection.
+The edge weights for the probable pixels is initialised with a seed but some will change after each iteration, until none of the weights change
+and we have convergence.
+
+The weights between pixels is determined by the information we can gain from their pixel values. Two values that are almost identical will have similar pixel values
+and we can determine that this is not an edge and hence attach a high weight to inform the algorithm that these pixels belong together.
+
+3. A mincut algorithm (toer-Wagner Algorithm) (REF: https://dl.acm.org/doi/10.1145/263867.263872) is then used to cut the graph. (EXPAND) This algorithm cuts the graph at the point where a cost function is minimised
+and assigns some pixels to the Source node and the rest to the Sink node.
+
+The output of the GrabCut algorithm is an array containing only the pixels that are "Probably Foreground" and the remainder are black.
+This becomes the input to our k-means algorithm and later Thresholding.
+
+
+
+# Colouring
+
+## kmeans
+
+
+
+The average complexity is given by O(k n T), were n is the number of samples and T is the number of iteration.
+
+The worst case complexity is given by O(n^(k+2/p)) with n = n_samples, p = n_features. (D. Arthur and S. Vassilvitskii, ‘How slow is the k-means method?’ SoCG2006)
+
+
+K-means is often faster than it's theoretical maximum time complexity but it can fall into local minima so it can be beneficial to restart the algorithm multiple times. The algorithm is initialised
+with initial centroids that are determined either randomly or using or other algorithms such as k-means++, Forgy, or the Bradley and Fayyad approach <CITE https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.50.8528&rep=rep1&type=pdf>. <REF> This leads to k-means outputting different
+clusters for the same input data each time the algorithm is run.

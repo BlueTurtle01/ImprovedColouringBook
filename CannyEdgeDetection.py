@@ -101,7 +101,7 @@ class Canny:
         imsave((str(self.output_path) + "Contours.jpg"), contours_, cmap="gray")
 
 
-pic = Canny(name="race", path="InputImages/race.jpg", clusters=10, output="OutputImages/race")
+pic = Canny(name="cat", path="InputImages/cat.jpg", clusters=10, output="OutputImages/cat")
 pic.k_means()
 pic.canny_edge_detection()
 pic.gaussian_filter(k=7)
@@ -109,7 +109,6 @@ pic.median(filter_size=5)
 pic.auto_canny(sigma=0.33)
 pic.canny()
 pic.draw_contours()
-
 
 
 

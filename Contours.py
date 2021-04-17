@@ -97,11 +97,11 @@ def white_to_transparency():
 
 def calculate_font_size(caption, box, img_fraction):
     fontsize = 20  # Starting fontsize
-    font = ImageFont.truetype("comicbold.ttf", fontsize)
+    font = ImageFont.truetype("Fonts/comicbold.ttf", fontsize)
     while font.getsize(caption)[0] < img_fraction * box.size[0]:
         # iterate until the text size is just larger than the criteria
         fontsize += 1
-        font = ImageFont.truetype("comicbold.ttf", fontsize)
+        font = ImageFont.truetype("Fonts/comicbold.ttf", fontsize)
 
     return font
 
@@ -109,7 +109,7 @@ def calculate_font_size(caption, box, img_fraction):
 
 def add_caption(comic_frame):
     width, height = comic_frame.size
-    font = ImageFont.truetype("comicbold.ttf", 40)
+    font = ImageFont.truetype("Fonts/comicbold.ttf", 40)
     draw = ImageDraw.Draw(comic_frame)
     caption = "Not all superheroes are found in comics"
     tag = "#HeroesOfThePandemic"
@@ -149,7 +149,7 @@ def blend_outputs(clusters):
     :return: NA
     """
 
-    compressed_image = imread((str(output_path) + str(file_name) + str(clusters) + "Clustered.jpg"))
+    compressed_image = imread((str(output_path) + str(clusters) + "Clustered.jpg"))
     compressed_image = cv2.cvtColor(compressed_image, cv2.COLOR_BGR2RGB)
     compressed_rgba = cv2.cvtColor(compressed_image, cv2.COLOR_RGB2RGBA)
     compressed_PIL = Image.fromarray(compressed_rgba)
@@ -171,7 +171,7 @@ def blend_outputs(clusters):
 def create_painting_template(outline, clusters):
     alpha = 0.2  # This is the amount of the coloured image we include. 0 is none.
     beta = 1 - alpha
-    compressed = imread((str(output_path) + str(file_name) + str(clusters) + "Clustered.jpg"))
+    compressed = imread((str(output_path) + str(clusters) + "Clustered.jpg"))
     compressed = cv2.cvtColor(compressed, cv2.COLOR_BGR2RGB)
 
     outline = np.concatenate([outline[..., np.newaxis]] * 3, axis=2)
@@ -220,7 +220,7 @@ def main_func(img, clusters):
     compressed_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # imread reads images as Blue, Green, Red, Alpha
     plot_image(image=cv2.cvtColor(img, cv2.COLOR_BGR2RGB), title="Compressed")
 
-    k = 9  # Size of the kernal for the Gaussian Blur
+    k = 9  # Size of the kernel for the Gaussian Blur
     blurred = cv2.GaussianBlur(compressed_img, (k, k), sigmaX=(k-1)/6)
     plot_image(image=blurred, title="Blurred", map="gray")
 
@@ -291,7 +291,7 @@ def calculate_clusters():
     # Flatten the image
     imag = np.array(original_image).reshape(rows*cols, 3)
 
-    K = range(1, 31, 5)
+    K = range(5, 31, 5)
     for k in K:
         start = perf_counter()
         print(k)
@@ -311,10 +311,11 @@ def calculate_clusters():
 
         imsave((str(output_path) + str(k) + "Clustered.jpg"), compressed_image)
 
+
     kneedle = KneeLocator(K, Sum_of_squared_distances, S=1.0, curve="convex", direction="decreasing")
 
     # plot_elbow_method: arguments (x, y1, y2, elbow point)
-    plot_elbow_method(Sum_of_squared_distances, times, K, knee=kneedle.knee)
+    plot_elbow_method(Sum_of_squared_distances, times, K, knee=kneedle.knee, output_path=output_path)
 
     # Implement k-means clustering to form k clusters
     kmeans = KMeans(n_clusters=kneedle.knee)
@@ -382,6 +383,6 @@ def pdf_creator(original_image):
 
 
 clusters, compressed_image, original_image = calculate_clusters()
-#threshold_image = main_func(compressed_image, clusters=clusters)
+threshold_image = main_func(compressed_image, clusters=clusters)
 #pdf_creator(original_image)
 

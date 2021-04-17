@@ -11,7 +11,7 @@ def plot_image(image, output_path, title, _map="gray"):
     plt.show()
 
 
-def plot_elbow_method(Sum_of_squared_distances, times, K, knee):
+def plot_elbow_method(Sum_of_squared_distances, times, K, knee, output_path):
     fig, ax1 = plt.subplots()
 
     color = "tab:red"

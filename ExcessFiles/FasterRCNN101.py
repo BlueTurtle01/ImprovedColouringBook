@@ -50,7 +50,7 @@ class MaskFinder:
         plt.show()
 
 
-FCNResnet = MaskFinder(file_name="david", model_type_a='pytorch/vision:v0.9.0', model_type_b='fcn_resnet101', model_name="FCN", output_path="MultiOutput/")
+FCNResnet = MaskFinder(file_name="race", model_type_a='pytorch/vision:v0.9.0', model_type_b='fcn_resnet101', model_name="FCN", output_path="MultiOutput/")
 FCNResnet.transform_image()
 mask = FCNResnet.make_predictions()
 FCNResnet.plot_mask()

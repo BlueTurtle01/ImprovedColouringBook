@@ -2,9 +2,7 @@ from matplotlib.pyplot import imread, imshow, imsave
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
-from Clustering import file_name, kmeans
 from PIL import Image
-import os
 from sklearn.cluster import KMeans
 
 
@@ -48,6 +46,11 @@ class Canny:
         plt.imshow(self.blurred)
         plt.show()
 
+    def bilateral_blur(self, k):
+        self.blurred = cv2.bilateralFilter(self.img, k, 75, 75)
+        plt.imshow(self.blurred)
+        plt.show()
+
     def median(self, filter_size=7):
         self.blurred = cv2.medianBlur(self.img, filter_size)
         plt.imshow(self.blurred)
@@ -68,6 +71,10 @@ class Canny:
         self.rgb = cv2.bitwise_not(rgb)  # Credit: https://stackoverflow.com/a/40954142/4367851
 
         plt.imshow(self.rgb)
+        plt.title("Canny")
+        plt.xticks([])
+        plt.yticks([])
+        imsave((str(self.output_path) + "Canny.jpg"), self.rgb, cmap="gray")
         plt.show()
 
     def draw_contours(self):
@@ -86,7 +93,7 @@ class Canny:
 
         final_contours = []
         for contour in contours:
-            if cv2.contourArea(contour) > 30:
+            if cv2.contourArea(contour) > 0:
                 final_contours.append(contour)
             else:
                 pass
@@ -98,50 +105,17 @@ class Canny:
         plt.xticks([])
         plt.yticks([])
         plt.title("Contours")
+        plt.show()
         imsave((str(self.output_path) + "Contours.jpg"), contours_, cmap="gray")
 
 
-pic = Canny(name="cat", path="InputImages/cat.jpg", clusters=10, output="OutputImages/cat")
+file_name = "sophia"
+pic = Canny(name=file_name, path=("InputImages/" + file_name + ".jpg"), clusters=10, output=("OutputImages/" + file_name + "/"))
 pic.k_means()
 pic.canny_edge_detection()
-pic.gaussian_filter(k=7)
+'''pic.gaussian_filter(k=7)'''
+pic.bilateral_blur(k=7)
 pic.median(filter_size=5)
 pic.auto_canny(sigma=0.33)
 pic.canny()
 pic.draw_contours()
-
-
-
-
-
-
-
-
-
-def plot_creator(clusters):
-    """
-    :param n: number of clusters for k-means
-    :return: NA - plots
-    """
-    img, palette = kmeans(int(clusters))
-
-    fig, axs = plt.subplots(3, 2, facecolor='w', edgecolor='k')
-    fig.subplots_adjust(hspace=.3, wspace=.001)
-    axs = axs.ravel()
-
-    for i in range(0, 6):
-        if i % 6 == 0:
-            img = imread(("OutputImages/" + str(file_name) + str(clusters) + "Clustered.jpg"))
-            axs[0].imshow(img.astype(np.uint8))
-            axs[0].set_xticks([])
-            axs[0].set_yticks([])
-            axs[0].set_title("Original with " + str(clusters) + " clusters")
-
-        else:
-            axs[i].imshow(canny(img, clusters))
-            axs[i].set_xticks([])
-            axs[i].set_yticks([])
-            axs[i].set_title(str("Canny Kernel: " + str(i)))
-
-    plt.savefig("Output" + str(clusters) + ".jpg", dpi=600, bbox_inches='tight')
-    plt.show()

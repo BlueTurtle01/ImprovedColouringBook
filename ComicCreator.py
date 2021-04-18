@@ -6,6 +6,16 @@ from sklearn.cluster import KMeans
 import pandas as pd
 import os
 import glob
+from UtilityFunctions import directory_creator
+
+"""
+Whilst creating the colouring book image I realised that applying the thresholded outlines on top of the original
+clustered image had quite a cartoon strip like aesthetic. I therefore created the below code to blend the two images
+together and add a caption and description to the image in the style of a comic book.
+
+It is not included in the final report as it was beyond the aim of the project and would have required more pages.
+However, I have included it here for posterity.
+"""
 
 
 def white_to_transparency():
@@ -144,14 +154,7 @@ for file_name in file_names:
     file_path = str("MultiInputs/" + file_name + ".jpg")
     output_path = ("MultiOutput/" + file_name + "/")
 
-    def create_directory():
-        # Create a directory for the outputs if one does not already exist
-        try:
-            os.mkdir(str(output_path))
-        except FileExistsError:
-            pass
-
-    create_directory()
+    directory_creator()
 
     comic = ComicCharacter(name=file_name, output=output_path, path=file_path)
     comic.calculate_optimal_clusters()

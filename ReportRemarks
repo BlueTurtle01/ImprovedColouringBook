@@ -6,49 +6,6 @@ Bayesian Knowledge:
 
 
 
-Title: Can Machine Learning convert photographs into colouring book images for real-world production settings?
-
-Introduction
-Many children, and in more recent times, adults enjoy colouring in as a way to relax. There are many books that contain
-generic images, such as flowers, race cars, landscapes etc, but there are few services that provide personalised colouring
-book images, let alone good quality ones at an affordable price. As are most problems when it comes to computer coding,
-and machine learning specifically, it is theoretically possible to complete this task given infinite computing power,
-infinite time, and infinite knowledge, thus we could end the paper here and agree that the aim as set out in the title of the paper is possible.
-However, this is not feasible in the real-world and hence we need to set some constraints on this project.
-These constraints are not chosen arbitrarily, they'll be chosen with consideration for previous knowledge that we posses.
-This introduction of knowledge in the form of our constraints puts us in the realm of Bayesian Machine Learning.
-
-Given an image we want to draw an edge at every point where two coloured areas meet. This seems intuitively easy, almost trivial,
-as a human. However, when we consider this more deeply it quickly becomes apparent why for a computer this is not so easy.
-A join is where 2 adjacent pixel values are different. However, in a very noisy image this proves difficult as the result
-is many more edges that we require. Given that we are trying to create a simpler version of the photograph to then be
-coloured in we have to be selective about which edges to keep and which to discard. We want to keep the edges that are important
-, such as the outline of a face, the outline of the body, or the house, etc. However, we do not want to draw an edge across every single strand of hair -
-even though there may indeed be a change in pixel value as per the original requirement to draw the edge. Here is our first
-introduction of knowledge that we must inject into the problem - What are important edges?
-
-### Insert image with all contours drawn to prove how terrible this looks ###
-
-Our second problem is how to select the number of clusters. Later we will do this numerically by minimising an error criteria but here we will discuss the high level problem.
-Each cluster is a unique colour in the final image. K-means does this iteratively until convergence using some initial starting points - often randomly chosen. However, the generic
-K-means selects clusters that mathematically minimise error, and not for aesthetics. An example can be seen below where there are a lot of grey/brown tones chosen but the colours
-of the dress/skirt, and the skin tone are ignored and are replaced by the more popular colours. This is the expected outcome of K-means so mechanically the algorithm is working correctly.
-As we can see though the clustered output is not appealing when we look at the 2 women. Our second piece of knowledge that we must include in the process is "What are important colours?".
-If a human were designing the output outline for this image we would discard a shade of brown (given that we already have a few) and chose dark blue or red for the clothes instead.
-The reason this is easy for a human is because we are internally assigning a value to the aesthetics of the image and decide that the gain from improved aesthetics outweighs the increase
-in mathematical error that is introduced by swapping the red/blue for the shade of brown that minimises the error. Coding "aesthetic beauty" is very difficult and to some extent subjective.
-
-It is tempting to count the number of pixels for each RGB colour and then just select k clusters for the 10 most popular colours. However, the colour of people's eyes, lips, and
-clothes will likely be lost if they do not make up the majority of the image, which seems unlikely and does not allow our algorithm to be generally applied. A partial solution to this is to separate our foreground from
-the background and apply k-means and edge detection to the foreground and background separately. This does not solve the problem of defining what "important colours" are, but it does allow us to use a different number of clusters
-for each section. This way the k colours chosen from the background can be different than the k colours chosen from the foreground, even if k is the same value. This allows us to still retain k clusters in the background to retain for
-example, detail in the foilage which would require multiple shades or green, but also retain detail in the foreground which may require multiple shades of skin tone. We can see in <Image of sophia with 2k> that just doubling the value for
-k does not solve this problem as often the result is that more shades of the most common colour are chosen and as previously assumed, this is unlikely to be the important object in the photograph, if the photograph follows conventional 1/3rd framing -
- where 1/3rd of the photograph contains the important object and the other 2/3rds form the surroundings.
-
-
-error is minimised when k = the number of pixels in the image as each pixel is its own cluster.
-
 
 xception was significantly slower than mobilenet and the performance was only a little better at finding the masks. Did not work well on the london scene.
 

@@ -1,4 +1,7 @@
- #Description of files
+# What does this repo do?
+This repo will allow you to upload an image and create a colouring book like outline from the image that can then be given to a child say and allow them to colour in a personalised image - such as a family photo.
+
+# Description of files
  
 **ColouringWithMask.py**<br>
 First obtains a mask that is fed into the GrabCut algorithm to remove the foreground part of the image which is then

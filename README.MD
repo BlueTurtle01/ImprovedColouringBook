@@ -23,5 +23,10 @@ Similar to ComicCreator.py but does not include the caption or text. The blend i
 as an underlay to guide the person colouring/painting the outline which colour to use. This is similar to paint by numbers
 but might be more accessible to younger audiences.
 
-UtilityFunctions.py
+# Things I learnt from this project
+1. I learnt about Canny Edge detection, and how to implement it, from my own research capabilities as I had no knowledge of this algorithm beforehand.
+2. I improved my use of Python Classes.
+3. I learnt to appreciate more the constraints that having the aim of making the outcome production ready puts onto a project. Theoretically this task is completely possible, but when considering that if this were to be put into production as a busines venture, we would not have unlimited time and resources, and would unlikely know the set of images that the user would want to upload. This does constrain us to only accepting images of a certain type, because we know how the algorithm will respond, and hence from a production point of view is not complete. However, the positive from this is that I have gained more awareness of how teams need to work together. It would be easy for the Data Engineers to say it's completely possible, but the manufacturers will have constraints that are based on the real world situation, and not the theoretical land that the Data Engineer may fall foul of.
+
+
 

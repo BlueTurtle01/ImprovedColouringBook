@@ -16,7 +16,7 @@ Applies the Canny Edge Detection algorithm, and then an OpenCV find & draw conto
 
 <img src = "InputImages/race.jpg" width="400" align="left">
 <img src = "OutputImages/race/Contours.jpg" width = 400 align="right">
-
+<br>
 
 **ComicCreator.py**<br>
 Extends the outputs of the AdaptiveThresholding function by overlaying the output on top of the clustered output from

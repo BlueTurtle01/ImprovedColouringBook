@@ -14,6 +14,8 @@ passed to the k-means algorithm and onto the AdaptiveThresholding function.
 **Contours.py**<br>
 Applies the Canny Edge Detection algorithm, and then an OpenCV find & draw contours method.
 
+[Race Car](blob/OutputImages/race/Canny.jpg)
+
 **ComicCreator.py**<br>
 Extends the outputs of the AdaptiveThresholding function by overlaying the output on top of the clustered output from
 the k-means algorithm to create a comic book like effect. A comic book-like caption and text are layered onto the top.

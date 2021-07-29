@@ -3,6 +3,8 @@ This repo will allow you to upload an image and create a colouring book like out
 
 # Description of files
  
+The ColouringWithMask and ColouringWithRegion often struggle with comic/animated images, for those I suggest using the Contours.py or CannyEdgeDetection.py scripts.
+
 **ColouringWithMask.py**<br>
 First obtains a mask that is fed into the GrabCut algorithm to remove the foreground part of the image which is then
 passed to the k-means algorithm and onto the AdaptiveThresholding function.

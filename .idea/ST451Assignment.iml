@@ -3,6 +3,7 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/ExcessFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/Papers" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.6 (LSE36)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

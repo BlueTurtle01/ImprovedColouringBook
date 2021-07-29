@@ -1,5 +1,5 @@
 import os
-import matplotli.pyplot as plt
+import matplotlib.pyplot as plt
 
 
 def directory_creator(file_name):

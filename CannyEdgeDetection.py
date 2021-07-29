@@ -109,7 +109,7 @@ class Canny:
         imsave((str(self.output_path) + "Contours.jpg"), contours_, cmap="gray")
 
 
-file_name = "sophia"
+file_name = "donald"
 pic = Canny(name=file_name, path=("InputImages/" + file_name + ".jpg"), clusters=10, output=("OutputImages/" + file_name + "/"))
 pic.k_means()
 pic.canny_edge_detection()

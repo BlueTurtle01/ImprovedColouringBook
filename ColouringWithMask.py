@@ -290,7 +290,8 @@ class Colouring:
         imsave((self.output_path + self.file_name + str(kneedle.knee) + "Clustered.jpg"), self.compressed_image)
 
     def thresholding(self):
-        # The output of the k-means algorithm is an array in the form of Blue,Green,Red (BGR) which needs to be converted to grayscale before we conduct a Gaussian Blur.
+        # The output of the k-means algorithm is an array in the form of Blue,Green,Red (BGR) which needs to be
+        # converted to grayscale before we conduct a Gaussian Blur.
         self.compressed_img = cv2.cvtColor(self.compressed_image, cv2.COLOR_BGR2GRAY)
 
         k = 9  # Size of the kernel for the Blur

@@ -17,7 +17,7 @@ passed to the k-means algorithm and onto the AdaptiveThresholding function.
 Applies the Canny Edge Detection algorithm, and then an OpenCV find & draw contours method.
 
 <figure>
-<img src = "InputImages/race.jpg" width="400">
+<img src = "MultiInputs/race.jpg" width="400">
 <img src = "OutputImages/race/Contours.jpg" width = 400>
 </figure>
 

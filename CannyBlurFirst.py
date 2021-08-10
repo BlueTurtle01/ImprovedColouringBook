@@ -154,9 +154,9 @@ for file_name in file_names:
     clusters = 10
     cr = cProfile.Profile()
     cr.enable()
-    pic = Canny(name=file_name, path=file_path, clusters=20, output=("MultiOutput/" + file_name + "/"), scalar=3)
+    pic = Canny(name=file_name, path=file_path, clusters=20, output=("MultiOutput/" + file_name + "/"), scalar=1)
     pic.k_means()
-    pic.median(filter_size=7)
+    pic.median(filter_size=9)
     #pic.replace_colours(clusters)
     pic.auto_canny(sigma=0.33)
     pic.draw_contours()

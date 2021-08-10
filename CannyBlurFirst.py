@@ -1,4 +1,4 @@
-from matplotlib.pyplot import imread, imshow, imsave
+from matplotlib.pyplot import imsave
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
@@ -8,24 +8,28 @@ import glob
 from UtilityFunctions import directory_creator
 import os
 from distinctipy import distinctipy
+import cProfile
 
 
 class Canny:
-    def __init__(self, name, path, clusters, output):
+    def __init__(self, name, path, clusters, output, scalar):
         self.file_name = name
         self.file_path = path
         self.clusters = clusters
         self.output_path = output
         self.imag = Image.open(self.file_path)
-        self.height = self.imag.size[0]
-        self.width = self.imag.size[1]
+        self.height, self.width = self.imag.size
+        self.scalar = scalar
 
     def k_means(self):
+        #Resize the image in the hopes that kmeans and contours can find the edges easier.
+        imag = self.imag.resize([int(self.scalar * s) for s in self.imag.size], Image.ANTIALIAS)
 
-        imag = self.imag.resize([int(1 * s) for s in self.imag.size], Image.ANTIALIAS)
+        # Dimension of the original image
+        cols, rows = imag.size
 
-        # Flatten the image
-        imag = np.array(imag).reshape(self.width * self.height, 3)
+        # Flatten the image with the new dimensions.
+        imag = np.array(imag).reshape(rows * cols, 3)
 
         # Implement k-means clustering to form k clusters
         kmeans = KMeans(n_clusters=self.clusters)
@@ -36,7 +40,7 @@ class Canny:
         compressed_image = np.clip(compressed_image.astype('uint8'), 0, 255)
 
         # Reshape the image to original dimension
-        self.compressed_image = compressed_image.reshape(self.width, self.height, 3)
+        self.compressed_image = compressed_image.reshape(rows, cols, 3)
 
         # Save and display output image
         plt.imshow(self.compressed_image)
@@ -49,7 +53,13 @@ class Canny:
     def median(self, filter_size=7):
         from skimage.restoration import estimate_sigma
 
-        noise = estimate_sigma(self.compressed_image, multichannel=True, average_sigmas=True)
+        noise = estimate_sigma(self.compressed_image,
+                               multichannel=True,
+                               average_sigmas=True)
+
+        self.compressed_image = cv2.resize(self.compressed_image,
+                                           dsize=(self.height * self.scalar, self.width * self.scalar),
+                                           interpolation=cv2.INTER_AREA)
 
         self.median = cv2.medianBlur(self.compressed_image, filter_size)
         plt.imshow(self.median)
@@ -64,7 +74,7 @@ class Canny:
 
 
     def replace_colours(self, clusters):
-        unique, counts = np.unique(self.compressed_image.reshape(-1, 3), axis=0, return_counts=True)
+        unique, counts = np.unique(self.median.reshape(-1, 3), axis=0, return_counts=True)
 
         colors = distinctipy.get_colors(clusters)
 
@@ -78,20 +88,21 @@ class Canny:
         index = 0
         for colour in unique:
             lower = np.array([colour[0], colour[1], colour[2]])
-            # Mask image to only select browns
             try:
-                mask = cv2.inRange(self.compressed_image, lower, lower)
+                #mask = cv2.inRange(self.median, lower, lower)
 
-                self.compressed_image[mask > 0] = colour_list[index]
+                #self.median[mask > 0] = colour_list[index]
+
+                self.median = np.where(self.median == lower, colour_list[index], self.median)
                 index += 1
             except IndexError:
                 pass
 
-        plt.imshow(self.compressed_image)
+        plt.imshow(self.median)
         plt.title("Removed")
         plt.xticks([])
         plt.yticks([])
-        imsave((str(self.output_path) + "DistinctColoured.png"), self.compressed_image, cmap="viridis")
+        imsave((str(self.output_path) + "DistinctColoured.png"), self.median.astype('uint8'))
         plt.show()
 
 
@@ -101,7 +112,7 @@ class Canny:
         # compute the median of the single channel pixel intensities
         v = np.median(self.canny)
         # apply automatic Canny edge detection using the computed median
-        lower = int(max(0, (0.5 - sigma) * v))
+        lower = int(max(0, (0.3 - sigma) * v))
         upper = int(min(255, (0.8 - sigma) * v))
 
         self.edged = cv2.Canny(self.canny, lower, upper)
@@ -141,9 +152,12 @@ for file_name in file_names:
     output_path = ("MultiOutput/" + file_name + "/")
 
     clusters = 10
-    pic = Canny(name=file_name, path=file_path, clusters=10, output=("MultiOutput/" + file_name + "/"))
+    cr = cProfile.Profile()
+    cr.enable()
+    pic = Canny(name=file_name, path=file_path, clusters=20, output=("MultiOutput/" + file_name + "/"), scalar=3)
     pic.k_means()
     pic.median(filter_size=7)
-    pic.replace_colours(clusters)
-    pic.auto_canny(sigma=0.20)
+    #pic.replace_colours(clusters)
+    pic.auto_canny(sigma=0.33)
     pic.draw_contours()
+    cr.disable()

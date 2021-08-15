@@ -3,12 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 from PIL import Image
-from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans, MiniBatchKMeans
 import glob
 from UtilityFunctions import directory_creator
 import os
 from distinctipy import distinctipy
 import cProfile
+import pstats
 
 
 class Canny:
@@ -25,6 +26,16 @@ class Canny:
         #Resize the image in the hopes that kmeans and contours can find the edges easier.
         imag = self.imag.resize([int(self.scalar * s) for s in self.imag.size], Image.ANTIALIAS)
 
+        unique_colors = set()
+        for i in range(imag.size[0]):
+            for j in range(imag.size[1]):
+                pixel = imag.getpixel((i, j))
+                unique_colors.add(pixel)
+
+        print('Unique color count = ', len(unique_colors))
+
+        self.filter_size = int(str(round(len(unique_colors), -3))[0])
+
         # Dimension of the original image
         cols, rows = imag.size
 
@@ -32,7 +43,8 @@ class Canny:
         imag = np.array(imag).reshape(rows * cols, 3)
 
         # Implement k-means clustering to form k clusters
-        kmeans = KMeans(n_clusters=self.clusters)
+        #kmeans = KMeans(n_clusters=self.clusters)
+        kmeans = MiniBatchKMeans(n_clusters=self.clusters)
         kmeans.fit(imag)
 
         # Replace each pixel value with its nearby centroid
@@ -51,17 +63,24 @@ class Canny:
         plt.show()
 
     def median(self, filter_size=7):
+
+        # Filter size needs to be odd. Sometimes I forget and put an even filter size. This will catch this error and
+        # reduce it by one to make it odd again.
+        if self.filter_size % 2 == 0:
+            self.filter_size = max(5, self.filter_size + 1)
+
+        else:
+            self.filter_size = max(5, self.filter_size)
+
         from skimage.restoration import estimate_sigma
 
-        noise = estimate_sigma(self.compressed_image,
-                               multichannel=True,
-                               average_sigmas=True)
+        #noise = estimate_sigma(self.compressed_image, multichannel=True, average_sigmas=True)
 
         self.compressed_image = cv2.resize(self.compressed_image,
                                            dsize=(self.height * self.scalar, self.width * self.scalar),
                                            interpolation=cv2.INTER_AREA)
 
-        self.median = cv2.medianBlur(self.compressed_image, filter_size)
+        self.median = cv2.medianBlur(self.compressed_image, self.filter_size)
         plt.imshow(self.median)
         plt.title("Median Blur")
         plt.xticks([])
@@ -151,13 +170,14 @@ for file_name in file_names:
 
     output_path = ("MultiOutput/" + file_name + "/")
 
-    clusters = 10
     cr = cProfile.Profile()
     cr.enable()
-    pic = Canny(name=file_name, path=file_path, clusters=20, output=("MultiOutput/" + file_name + "/"), scalar=1)
+    pic = Canny(name=file_name, path=file_path, clusters=7, output=("MultiOutput/" + file_name + "/"), scalar=1)
     pic.k_means()
-    pic.median(filter_size=9)
+    pic.median()
     #pic.replace_colours(clusters)
     pic.auto_canny(sigma=0.33)
     pic.draw_contours()
     cr.disable()
+    stats = pstats.Stats(cr).sort_stats('tottime')
+    stats.print_stats(15)

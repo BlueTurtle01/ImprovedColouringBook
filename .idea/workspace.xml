@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="f15ea59d-2b15-4d8a-bfd5-5631e46c32bf" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+        <option value="HTML File" />
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="ProjectId" id="1wDzckvwLgVgpsgmnmiRF1qpxrp" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/FlaskApp/templates" />
+    <property name="settings.editor.selected.configurable" value="Errors" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\GitHub\ImprovedColouringBook\FlaskApp\templates" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\GitHub\ImprovedColouringBook\MachineLearning" />
+      <recent name="D:\GitHub\ImprovedColouringBook" />
+      <recent name="D:\GitHub\ImprovedColouringBook\PythonScripts\InputImages" />
+      <recent name="D:\GitHub\ImprovedColouringBook\FlaskApp\static\img\images" />
+      <recent name="D:\GitHub\ImprovedColouringBook\ExcessFiles" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.SingleFileLocalPython">
+    <configuration name="MainScript" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ImprovedColouringBook" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/FlaskApp" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/FlaskApp/MainScript.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="RenderScript" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ImprovedColouringBook" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/FlaskApp" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/FlaskApp/RenderScript.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="SingleFileElbow" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ImprovedColouringBook" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/PythonScripts" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/PythonScripts/SingleFileElbow.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="SingleFileLocalPython" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ImprovedColouringBook" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/PythonScripts" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/PythonScripts/SingleFileLocalPython.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="flask_app" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ImprovedColouringBook" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/FlaskApp" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/FlaskApp/flask_app.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.SingleFileLocalPython" />
+        <item itemvalue="Python.SingleFileElbow" />
+        <item itemvalue="Python.flask_app" />
+        <item itemvalue="Python.RenderScript" />
+        <item itemvalue="Python.MainScript" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f15ea59d-2b15-4d8a-bfd5-5631e46c32bf" name="Default Changelist" comment="" />
+      <created>1628008028533</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1628008028533</updated>
+      <workItem from="1628008036887" duration="306000" />
+      <workItem from="1628008422789" duration="7994000" />
+      <workItem from="1628024976035" duration="248000" />
+      <workItem from="1628025361434" duration="7823000" />
+      <workItem from="1628100929002" duration="1858000" />
+      <workItem from="1628353877843" duration="5023000" />
+      <workItem from="1628363555331" duration="674000" />
+      <workItem from="1628377953102" duration="1139000" />
+      <workItem from="1628442675494" duration="17869000" />
+      <workItem from="1628496502589" duration="6948000" />
+      <workItem from="1628516314084" duration="16000" />
+      <workItem from="1628520879388" duration="3617000" />
+      <workItem from="1628528487967" duration="7052000" />
+      <workItem from="1628580176776" duration="622000" />
+      <workItem from="1628590238491" duration="2114000" />
+      <workItem from="1628620313933" duration="33000" />
+      <workItem from="1628844428813" duration="538000" />
+      <workItem from="1628845711547" duration="15000" />
+      <workItem from="1628883000040" duration="5000" />
+      <workItem from="1629017972452" duration="3239000" />
+      <workItem from="1629022404612" duration="1051000" />
+      <workItem from="1629023473387" duration="49000" />
+      <workItem from="1629026053925" duration="2188000" />
+      <workItem from="1629035703593" duration="1691000" />
+      <workItem from="1629040482335" duration="12000" />
+      <workItem from="1629040536773" duration="5000" />
+      <workItem from="1629058104915" duration="190000" />
+      <workItem from="1629058543358" duration="4000" />
+      <workItem from="1629132019077" duration="535000" />
+      <workItem from="1629132578053" duration="8517000" />
+      <workItem from="1629188626787" duration="599000" />
+      <workItem from="1629189301261" duration="13881000" />
+      <workItem from="1629238610114" duration="17000" />
+      <workItem from="1629410423089" duration="613000" />
+      <workItem from="1632419714064" duration="37000" />
+      <workItem from="1632420141285" duration="942000" />
+      <workItem from="1632550434053" duration="529000" />
+      <workItem from="1633162552161" duration="643000" />
+      <workItem from="1633347020596" duration="1289000" />
+      <workItem from="1633412058115" duration="1075000" />
+      <workItem from="1633413150242" duration="1205000" />
+      <workItem from="1633415093802" duration="5707000" />
+      <workItem from="1633426671160" duration="1735000" />
+      <workItem from="1633428438140" duration="1529000" />
+      <workItem from="1633449113626" duration="610000" />
+      <workItem from="1633504894233" duration="595000" />
+      <workItem from="1633521213874" duration="6129000" />
+      <workItem from="1633592306570" duration="1941000" />
+      <workItem from="1633620953858" duration="2864000" />
+      <workItem from="1633682165614" duration="1495000" />
+      <workItem from="1633685736600" duration="1932000" />
+      <workItem from="1633692817479" duration="4144000" />
+      <workItem from="1633704932118" duration="1889000" />
+      <workItem from="1633765480106" duration="588000" />
+      <workItem from="1633782870882" duration="611000" />
+      <workItem from="1633792064407" duration="2012000" />
+      <workItem from="1633851381428" duration="1753000" />
+      <workItem from="1633855965659" duration="285000" />
+      <workItem from="1633957243352" duration="493000" />
+      <workItem from="1633961470473" duration="543000" />
+      <workItem from="1633962759819" duration="1656000" />
+      <workItem from="1633964651935" duration="5656000" />
+      <workItem from="1634017966056" duration="695000" />
+      <workItem from="1634027717743" duration="329000" />
+      <workItem from="1634075200113" duration="605000" />
+      <workItem from="1634110367578" duration="4637000" />
+      <workItem from="1634117601318" duration="1896000" />
+      <workItem from="1634120604758" duration="643000" />
+      <workItem from="1634121692394" duration="760000" />
+      <workItem from="1634142840554" duration="367000" />
+      <workItem from="1634153975238" duration="36000" />
+      <workItem from="1634155779467" duration="1293000" />
+      <workItem from="1634195202513" duration="836000" />
+      <workItem from="1634218922358" duration="2148000" />
+      <workItem from="1634241650826" duration="778000" />
+      <workItem from="1634407888911" duration="83000" />
+      <workItem from="1634715484348" duration="47000" />
+      <workItem from="1636139587023" duration="10000" />
+      <workItem from="1636223544504" duration="31000" />
+      <workItem from="1636223596913" duration="5000" />
+      <workItem from="1636553532795" duration="309000" />
+    </task>
+    <task id="LOCAL-00001" summary="Tidied code up&#10;Improved Edge detection">
+      <created>1628504028875</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1628504028875</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Tidied code up">
+      <created>1628590383729</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1628590383729</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Added SVGs">
+      <created>1628607769042</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1628607769042</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Changed to minikmeans and included filter size as a function of number of unique colours">
+      <created>1629023502405</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1629023502405</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Changed to minikmeans and included filter size as a function of number of unique colours">
+      <created>1636553663007</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1636553663007</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Tidied code up&#10;Improved Edge detection" />
+    <MESSAGE value="Tidied code up" />
+    <MESSAGE value="Added SVGs" />
+    <MESSAGE value="Changed to minikmeans and included filter size as a function of number of unique colours" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed to minikmeans and included filter size as a function of number of unique colours" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$Utility.coverage" NAME="Utility Coverage Results" MODIFIED="1628450583130" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$sitebuilder.coverage" NAME="sitebuilder Coverage Results" MODIFIED="1633685862898" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/flask-blog-tutorial-master" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$Multi.coverage" NAME="Multi Coverage Results" MODIFIED="1628102123055" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$Potrace.coverage" NAME="Potrace Coverage Results" MODIFIED="1633163132786" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/PythonScripts" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$Jup.coverage" NAME="Jup Coverage Results" MODIFIED="1632420562226" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$SingleLocalFileSplit.coverage" NAME="SingleLocalFileSplit Coverage Results" MODIFIED="1633697367637" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/PythonScripts" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$flask_app.coverage" NAME="flask_app Coverage Results" MODIFIED="1634195299351" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/FlaskApp" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$app.coverage" NAME="app Coverage Results" MODIFIED="1633682797003" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/FlaskApp/Blog" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$SingleFileCut.coverage" NAME="SingleFileCut Coverage Results" MODIFIED="1633964213817" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/PythonScripts" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$ColouringWithMask.coverage" NAME="ColouringWithMask Coverage Results" MODIFIED="1628010185125" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$CannyEdgeDetection.coverage" NAME="CannyEdgeDetection Coverage Results" MODIFIED="1628496513934" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$RandomCombinations.coverage" NAME="RandomCombinations Coverage Results" MODIFIED="1629134804167" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$CannyBlurFirst.coverage" NAME="CannyBlurFirst Coverage Results" MODIFIED="1629221064474" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$__init__.coverage" NAME="__init__ Coverage Results" MODIFIED="1633683537763" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Personal-blog-flask-master/api" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$SingleFileElbow.coverage" NAME="SingleFileElbow Coverage Results" MODIFIED="1634225075862" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/PythonScripts" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$CannyBlurFirst__1_.coverage" NAME="CannyBlurFirst (1) Coverage Results" MODIFIED="1633162616531" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/PythonScripts" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$Test.coverage" NAME="Test Coverage Results" MODIFIED="1628533514149" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$SelectRandomFile.coverage" NAME="SelectRandomFile Coverage Results" MODIFIED="1629197957845" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$RenderScript.coverage" NAME="RenderScript Coverage Results" MODIFIED="1634112217808" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/FlaskApp" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$SingleFileLocalPython.coverage" NAME="SingleFileLocalPython Coverage Results" MODIFIED="1636553614981" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/PythonScripts" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$__init____1_.coverage" NAME="__init__ (1) Coverage Results" MODIFIED="1633683598606" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/api" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$MainFileWithGrabCut.coverage" NAME="MainFileWithGrabCut Coverage Results" MODIFIED="1633961961607" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/FlaskApp" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$MainScript.coverage" NAME="MainScript Coverage Results" MODIFIED="1633966073705" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/FlaskApp" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$ColouringWithRegion.coverage" NAME="ColouringWithRegion Coverage Results" MODIFIED="1628010130701" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ImprovedColouringBook$Potracer.coverage" NAME="Potracer Coverage Results" MODIFIED="1629035938664" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
